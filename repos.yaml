@@ -1,4 +1,4 @@
 swarm-cluster:
-  url: "git@github.com:runarsf/swarm-cluster.git"
+  url: "https://github.com/runarsf/swarm-cluster.git"
   username: "runarsf"
   password: "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"
