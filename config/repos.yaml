@@ -1,0 +1,4 @@
+swarm-cluster:
+  url: "https://github.com/DCSG2003-V25-8/swarm-cluster.git"
+  username: "DCSG2003-V25-8"
+  password_file: "/run/secrets/github_pat"

@@ -1,11 +1,9 @@
-version: "3.7"
-
 services:
   nginx:
     image: nginx:latest
     deploy:
       placement:
         constraints:
-          - node.labels.role == www2
+          - node.labels.tag == www
     ports:
       - "80:80"

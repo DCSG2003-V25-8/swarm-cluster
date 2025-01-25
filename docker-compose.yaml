@@ -9,7 +9,30 @@ services:
       - "3005:8080"
     environment:
       GIN_MODE: "debug" # debug / release
+    restart: "unless-stopped"
+    secrets:
+      - "github_pat"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./repos.yaml:/app/repos.yaml:ro"
-      - "./stacks.yaml:/app/stacks.yaml:ro"
+    configs:
+      - source: stacks
+        target: /app/stacks.yaml
+        mode: 0400
+      - source: repos
+        target: /app/repos.yaml
+        mode: 0400
+      - source: config
+        target: /app/config.yaml
+        mode: 0400
+
+secrets:
+  password:
+    file: github_pat
+
+configs:
+  stacks:
+    file: ./config/stacks.yaml
+  repos:
+    file: ./config/repos.yaml
+  config:
+    file: ./config/config.yaml
