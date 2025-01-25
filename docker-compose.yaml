@@ -26,6 +26,11 @@ services:
         mode: 0400
 
 secrets:
+  # Create a fine-grained access token with the following permissions:
+  # Repository access: Only select repositories
+  # Repository permissions:
+  #   Contents: Read-only
+  #   Metadata: Read-only
   github_pat:
     file: github_pat
 

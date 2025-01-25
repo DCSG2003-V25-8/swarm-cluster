@@ -1,4 +1,7 @@
-# Docker Swarm Mode Cluster
+# *Docker Swarm Mode* Cluster
+
+Managed by [swarm-cd](https://github.com/m-adawi/swarm-cd).
+
 
 ## Relevant commands
 
