@@ -2,8 +2,14 @@ services:
   nginx:
     image: nginx:latest
     deploy:
+      replicas: 2
       placement:
         constraints:
           - node.labels.tag == www
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     ports:
       - "80:80"
