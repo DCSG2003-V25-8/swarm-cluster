@@ -1,0 +1,4 @@
+helloworld:
+  repo: swarm-cluster
+  branch: main
+  compose_file: helloworld/compose.yaml

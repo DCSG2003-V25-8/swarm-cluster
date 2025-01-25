@@ -1,0 +1,7 @@
+version: "3.7"
+
+services:
+  helloworld:
+    image: strm/helloworld-http:latest
+    ports:
+      - "80:8080"
