@@ -6,6 +6,6 @@ services:
     deploy:
       placement:
         constraints:
-          - node.role == www2
+          - node.labels.role == www2
     ports:
       - "80:80"
