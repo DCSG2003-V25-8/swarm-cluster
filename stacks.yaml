@@ -1,4 +1,4 @@
-helloworld:
+nginx:
   repo: swarm-cluster
   branch: main
-  compose_file: helloworld/compose.yaml
+  compose_file: nginx/compose.yaml

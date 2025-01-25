@@ -1,0 +1,14 @@
+services:
+  nginx:
+    image: nginx:latest
+    deploy:
+      placement:
+        constraints:
+          - node.role == www
+    configs:
+      - source: config
+        target: /etc/nginx/conf.d/default.conf
+
+configs:
+  config: 
+    file: configs/nginx.conf
