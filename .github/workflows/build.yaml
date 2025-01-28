@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
 
 jobs:
-      push-store-image:
+      push-bookface-image:
         runs-on: ubuntu-latest
         defaults:
           run:
-            working-directory: './Store'
+            working-directory: './bookface'
         steps:
           - name: 'Checkout GitHub Action'
             uses: actions/checkout@main
