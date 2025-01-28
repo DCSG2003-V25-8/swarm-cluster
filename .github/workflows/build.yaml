@@ -7,6 +7,7 @@ on:
         description: 'The stack to deploy'
         required: true
         type: choice
+        options:
           - bookface
 
 jobs:
