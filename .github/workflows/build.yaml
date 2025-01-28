@@ -2,6 +2,13 @@ name: Deploy Images to GHCR
 
 on:
   workflow_dispatch:
+    inputs:
+      directory:
+        description: 'The stack to deploy'
+        required: true
+        type: choice
+        options:
+          - bookface
 
 jobs:
   push-bookface-image:
@@ -9,9 +16,6 @@ jobs:
     permissions:
       packages: write
       contents: read
-    defaults:
-      run:
-        working-directory: './bookface'
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@main
@@ -26,7 +30,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:bookface"
+          context: "{{defaultContext}}:{{inputs.directory}}"
           push: true
           tags: ghcr.io/dcsg2003-v25-8/bookface:latest
 
