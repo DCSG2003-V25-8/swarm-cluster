@@ -6,9 +6,9 @@ on:
 jobs:
   push-bookface-image:
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      contents: read
+    # permissions:
+    #   packages: write
+    #   contents: read
     defaults:
       run:
         working-directory: './bookface'
@@ -28,6 +28,6 @@ jobs:
         with:
           context: "{{defaultContext}}:bookface"
           push: true
-          tags: user/app:latest
+          tags: DCSG2003-V25-8/bookface:latest
 
 
