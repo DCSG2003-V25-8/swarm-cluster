@@ -11,7 +11,7 @@ on:
           - bookface
 
 jobs:
-  push-bookface-image:
+  push-image:
     runs-on: ubuntu-latest
     permissions:
       packages: write
