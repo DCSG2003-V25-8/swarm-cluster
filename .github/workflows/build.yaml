@@ -6,9 +6,9 @@ on:
 jobs:
   push-bookface-image:
     runs-on: ubuntu-latest
-    # permissions:
-    #   packages: write
-    #   contents: read
+    permissions:
+      packages: write
+      contents: read
     defaults:
       run:
         working-directory: './bookface'
