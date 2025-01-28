@@ -14,6 +14,8 @@ services:
     configs:
       - source: bookface
         target: /var/www/html/config.json
+    networks:
+      - "swarm"
 
 configs:
   bookface:
@@ -21,3 +23,7 @@ configs:
     #   $ CFG=1 docker stack deploy -c docker-stack.yml haproxy
     name: "config.json-v${CFG:-0}"
     file: ./config.json
+
+networks:
+  swarm:
+    external: true
