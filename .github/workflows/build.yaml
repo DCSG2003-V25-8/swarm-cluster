@@ -8,7 +8,7 @@ on:
         required: true
         type: choice
         options:
-          - bookface
+          - 'bookface'
 
 jobs:
   push-bookface-image:
@@ -18,7 +18,7 @@ jobs:
       contents: read
     defaults:
       run:
-        working-directory: ./{{inputs.directory}}
+        working-directory: './{{inputs.directory}}'
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@main
