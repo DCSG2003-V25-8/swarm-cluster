@@ -16,6 +16,9 @@ jobs:
     permissions:
       packages: write
       contents: read
+    defaults:
+      run:
+        working-directory: ./{{inputs.directory}}
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@main
