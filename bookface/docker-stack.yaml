@@ -1,0 +1,25 @@
+services:
+  bookface:
+    build: ./
+    deploy:
+      replicas: 2
+      placement:
+        constraints:
+          - node.labels.tag == www
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    ports:
+      - "80:80"
+    configs:
+      - source: bookface
+        target: /var/www/html/config.json
+
+configs:
+  bookface:
+    # NOTE This is necessary because docker doesn't redeploy configs.
+    #   $ CFG=1 docker stack deploy -c docker-stack.yml haproxy
+    name: "config.json-v${CFG:-0}"
+    file: ./config.json
