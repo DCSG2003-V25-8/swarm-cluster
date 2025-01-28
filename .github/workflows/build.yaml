@@ -28,6 +28,6 @@ jobs:
         with:
           context: "{{defaultContext}}:bookface"
           push: true
-          tags: DCSG2003-V25-8/bookface:latest
+          tags: ghcr.io/DCSG2003-V25-8/bookface:latest
 
 
