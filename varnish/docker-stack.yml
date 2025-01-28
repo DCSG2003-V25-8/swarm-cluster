@@ -1,0 +1,47 @@
+services:
+  varnish:
+    image: "varnish:stable"
+    hostname: "varnish"
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - "node.labels.balancer == true"
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
+        monitor: 30s
+        max_failure_ratio: 0.2
+      restart_policy:
+        condition: on-failure
+          # delay: 5s
+          # max_attempts: 3
+    ports:
+      - "80:80"
+    networks:
+      - "swarm"
+    environment:
+      VARNISH_SIZE: "1G"
+    tmpfs:
+      - "/var/lib/varnish:exec"
+    configs:
+      - source: "varnish"
+        target: "/etc/varnish/default.vcl"
+    # healthcheck:
+    #   test: [ "CMD", "varnishd", "-Cf", "/etc/varnish/default.vcl" ]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+
+configs:
+  varnish:
+    # NOTE This is necessary because docker doesn't redeploy configs.
+    #   $ CFG=1 docker stack deploy -c docker-stack.yml haproxy
+    name: "default.vcl-v${CFG:-0}"
+    file: ./default.vcl
+
+networks:
+  swarm:
+    external: true

@@ -1,4 +1,4 @@
-nginx:
+varnish:
   repo: swarm-cluster
   branch: main
-  compose_file: nginx/docker-stack.yml
+  compose_file: varnish/docker-stack.yml

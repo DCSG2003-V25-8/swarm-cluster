@@ -5,7 +5,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.role == manager
+          - "node.role == manager"
     ports:
       - "3005:8080"
     environment:
