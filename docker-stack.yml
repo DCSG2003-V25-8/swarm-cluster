@@ -1,6 +1,7 @@
 services:
   swarm-cd:
     image: "ghcr.io/m-adawi/swarm-cd:latest"
+    hostname: "swarm-cd"
     deploy:
       placement:
         constraints:

@@ -1,0 +1,115 @@
+services:
+  cockroachdb:
+    image: "cockroachdb/cockroach:v24.3.3" # TODO Hvilken versjon bruker vi?
+    deploy:
+      replicas: 2
+      placement:
+        constraints:
+          - "node.labels.db == true"
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      # limits:
+      #   cpus: '0.50'
+      #   memory: 50M
+      #   pids: 1
+      # reservations:
+      #   cpus: '0.25'
+      #   memory: 20M
+    command: >
+      start
+      --insecure
+      --join tasks.cockroachdb:26257
+      --advertise-host $(hostname -f)
+      --http-addr 0.0.0.0
+      --cache 25%
+      --max-sql-memory 25%
+    # ports:
+    #   - "8080:8080"    # CockroachDB Admin UI (insecure mode)
+    #   - "26257:26257"
+    volumes:
+      - "cockroach-data:/bfdata"
+    networks:
+      - "swarm"
+
+volumes:
+  cockroach-data:
+    driver: local
+
+networks:
+  swarm:
+    external: true
+
+
+      # docker exec -it <container_id> ./cockroach node status \
+      #   --insecure \
+      #   --host=localhost:26257
+      #
+      #   backend cockroachdb
+      #     balance roundrobin
+      #     server node1 tasks.cockroachdb:26257 check
+
+# x-roach: &roach
+#   image: "cockroachdb/cockroach:v24.3.3"
+#   stop_grace_period: 1m
+#   deploy:
+#     replicas: 1
+#     placement:
+#       constraints:
+#         - "node.labels.db == true"
+#     restart_policy:
+#       condition: unless-stopped
+#       delay: 10s
+#       max_attempts: 5
+#       window: 120s
+#   networks:
+#     - "swarm"
+#   environment:
+#     ALLOW_EMPTY_PASSWORD: "yes"
+#   # command:
+#   # - "start"
+#   # - "--advertise-addr=roach1:26357"
+#   # - "--http-addr=roach1:8080"
+#   # - "--listen-addr=roach1:26357"
+#   # - "--sql-addr=roach1:26257"
+#   # - "--insecure"
+#   # - "--store=/bfdata"
+#   # - "--join=roach1:26357,roach2:26357"
+#   # hostname: "roach"
+#   # ports:
+#   #   - "8080:8080"
+#   #   - "26257:26257"
+#   # volumes:
+#   #   - "roach:/bfdata" # /cockroach/cockroach-data
+# 
+# # docker exec -it roach1 ./cockroach --host=roach1:26357 init --insecure
+# 
+# services:
+#   roach1:
+#     <<: *roach
+#     hostname: "roach1"
+#     container_name: "roach1"
+#     volumes:
+#       - "roach1:/bfdata"
+#     command: start --join=roach1,roach2 --store=/bfdata --insecure --listen-addr=roach1:26257 --advertise-addr=roach1:26257
+# 
+#   roach2:
+#     <<: *roach
+#     hostname: "roach2"
+#     container_name: "roach2"
+#     volumes:
+#       - "roach2:/bfdata"
+#     command: start --join=roach1,roach2 --store=/bfdata --insecure --listen-addr=roach2:26257 --advertise-addr=roach2:26257
+# 
+# volumes:
+#   roach1:
+#   roach2:
+# 
+# networks:
+#   swarm:
+#     external: true

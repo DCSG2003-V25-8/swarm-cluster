@@ -1,4 +1,4 @@
 nginx:
   repo: swarm-cluster
   branch: main
-  compose_file: nginx/compose.yaml
+  compose_file: nginx/docker-stack.yml

@@ -1,0 +1,46 @@
+services:
+  haproxy:
+    image: "haproxy:latest"
+    hostname: "haproxy"
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - "node.labels.balancer == true"
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
+        monitor: 30s
+        max_failure_ratio: 0.2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+    ports:
+      - "80:80"
+      - "443:443"
+    sysctls:
+      - "net.ipv4.ip_unprivileged_port_start=0"
+    networks:
+      - "swarm"
+    configs:
+      - source: "haproxy"
+        target: "/usr/local/etc/haproxy/haproxy.cfg"
+    healthcheck:
+      test: [ "CMD", "haproxy", "-c", "-f", "/usr/local/etc/haproxy/haproxy.cfg" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+configs:
+  haproxy:
+    # NOTE This is necessary because docker doesn't redeploy configs.
+    #   $ CFG=1 docker stack deploy -c docker-stack.yml haproxy
+    name: "haproxy.cfg-v${CFG:-0}"
+    file: ./haproxy.cfg
+
+networks:
+  swarm:
+    external: true

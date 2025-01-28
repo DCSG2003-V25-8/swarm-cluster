@@ -1,6 +1,9 @@
 # *Docker Swarm Mode* Cluster
 
-Managed by [swarm-cd](https://github.com/m-adawi/swarm-cd).
+Managed by [swarm-cd](https://github.com/m-adawi/swarm-cd).\
+[config/stacks.yaml](./config/stacks.yaml) contains the stacks `swarm-cd` will keep in sync.
+`swarm-cd` will poll for updates every 120s (configured in [config/config.yaml](./config/config.yaml)).
+Alternatively, you can test deployments with `docker stack deploy -c compose.yaml <name>`.
 
 
 ## Relevant commands
@@ -15,3 +18,8 @@ docker node update --label-add tag=www www1
 docker node inspect www1
 docker stack rm helloworld
 ```
+
+
+## Relevant links
+
+- [Compose Deploy Specification](https://docs.docker.com/reference/compose-file/deploy/)

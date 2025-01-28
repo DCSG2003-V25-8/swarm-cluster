@@ -1,15 +1,19 @@
 services:
   nginx:
-    image: nginx:latest
+    image: "nginx:latest"
     deploy:
       replicas: 2
       placement:
         constraints:
-          - node.labels.tag == www
+          - "node.labels.webserver == true"
       restart_policy:
         condition: on-failure
         delay: 5s
         max_attempts: 3
         window: 120s
-    ports:
-      - "80:80"
+    networks:
+      - "swarm"
+
+networks:
+  swarm:
+    external: true

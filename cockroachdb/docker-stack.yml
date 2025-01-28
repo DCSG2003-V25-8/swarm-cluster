@@ -1,0 +1,69 @@
+# docker exec -it roach1 ./cockroach --host=roach1:26357 init --insecure
+# docker exec -it <container_id> ./cockroach node status \
+#   --insecure \
+#   --host=localhost:26257
+
+# NOTE They don't seem to be able to share volumes on one host
+services:
+  cockroachdb:
+    image: "cockroachdb/cockroach:v24.3.3" # TODO Hvilken versjon bruker vi?
+    stop_grace_period: 1m
+    deploy:
+      replicas: 2
+      placement:
+        constraints:
+          - "node.labels.db == true"
+        preferences:
+          - spread: "node.hostname"
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
+        monitor: 30s
+        max_failure_ratio: 0.2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+      # limits:
+      #   cpus: '0.50'
+      #   memory: 50M
+      #   pids: 1
+      # reservations:
+      #   cpus: '0.25'
+      #   memory: 20M
+    # --listen-addr=roach1:26257 --advertise-addr=roach1:26257
+    # ports:
+    #   - "8080:8080"    # CockroachDB Admin UI (insecure mode)
+    #   - "26257:26257"
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+      COCKROACH_MAX_OFFSET: "500ms"
+    volumes:
+     - cockroachdb-data-{{.Task.Slot}}:/cockroach/cockroach-data
+    # volumes:
+    #   - type: bind
+    #     source: /data/cockroachdb/{{.Service.Name}}-{{.Task.Slot}}
+    #     target: /cockroach/cockroach-data
+    networks:
+      - "swarm"
+    command:
+      - "start"
+      - "--insecure"
+      - "--advertise-addr={{.Task.Node.Hostname}}:26257"
+      - "--join=tasks.cockroachdb:26257"
+      - "--http-addr=0.0.0.0:8080"
+      - "--cache=25%"
+      - "--max-sql-memory=25%"
+
+volumes:
+  cockroachdb-data-1:
+    driver: local
+  cockroachdb-data-2:
+    driver: local
+  cockroachdb-data-3:
+    driver: local
+
+networks:
+  swarm:
+    external: true
