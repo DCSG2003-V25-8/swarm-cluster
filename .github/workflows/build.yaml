@@ -17,7 +17,7 @@ jobs:
       contents: read
     defaults:
       run:
-        working-directory: './{{inputs.stack}}'
+        working-directory: './${{inputs.stack}}'
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@main
@@ -32,8 +32,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:{{inputs.stack}}"
+          context: "${{defaultContext}}:${{inputs.stack}}"
           push: true
-          tags: ghcr.io/dcsg2003-v25-8/{{inputs.stack}}:latest
+          tags: ghcr.io/dcsg2003-v25-8/${{inputs.stack}}:latest
 
 
