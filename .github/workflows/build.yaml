@@ -7,7 +7,7 @@ on:
         description: 'The stack to deploy'
         required: true
         type: choice
-          - "bookface"
+          - bookface
 
 jobs:
   push-bookface-image:
