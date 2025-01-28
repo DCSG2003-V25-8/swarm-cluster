@@ -22,7 +22,7 @@ jobs:
 
           - name: 'Build Inventory Image'
             run: |
-              docker build . --tag ghcr.io/DCSG2003-V25-8/store:latest
+              docker build ./bookface/Dockerfile --tag ghcr.io/DCSG2003-V25-8/store:latest
               docker push ghcr.io/DCSG2003-V25-8/store:latest
 
 
