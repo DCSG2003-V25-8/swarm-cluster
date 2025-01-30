@@ -9,14 +9,15 @@ Alternatively, you can test deployments with `docker stack deploy -c compose.yam
 ## Relevant commands
 
 ```bash
-docker stack deploy --compose-file docker-compose.yaml swarm-cd
+docker stack deploy --compose-file docker-stack.yml swarm-cd
 
 docker service ls
-docker service ps <ID>
+docker service ps --no-trunc <ID>
 docker service logs -f <ID>
 docker node update --label-add tag=www www1
 docker node inspect www1
 docker stack rm helloworld
+CFG=$RANDOM docker stack deploy -c docker-stack.yml --detach=false <NAME>
 ```
 
 

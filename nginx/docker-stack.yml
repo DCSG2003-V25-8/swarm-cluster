@@ -6,6 +6,9 @@ services:
       placement:
         constraints:
           - "node.labels.webserver == true"
+        max_replicas_per_node: 1
+        preferences:
+          - spread: "node.hostname"
       restart_policy:
         condition: on-failure
         delay: 5s
