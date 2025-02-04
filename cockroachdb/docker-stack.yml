@@ -2,7 +2,7 @@
 
 services:
   cockroachdb:
-    image: "cockroachdb/cockroach:v24.3.3" # TODO Hvilken versjon bruker vi?
+    image: "cockroachdb/cockroach:v23.1.13"
     stop_grace_period: 1m
     deploy:
       replicas: 2

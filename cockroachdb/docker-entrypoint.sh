@@ -11,9 +11,9 @@ HEALTH_API="http://localhost:8080/health?ready=1"
 printf 'Starting CockroachDB instance %s...\n' "${SWARM_ID}"
 
 printf 'Starting CockroachDB in background...\n'
+# TODO Advertise as hostname (--advertise-addr)
 ./cockroach start \
   --insecure \
-  # TODO Advertise as hostname
   --advertise-addr="0.0.0.0:26257" \
   --join="tasks.cockroachdb:26257" \
   --http-addr="0.0.0.0:8080" \
@@ -35,8 +35,8 @@ if test "${SWARM_ID}" -eq "1"; then
         printf 'CockroachDB already initialized, continuing...\n';;
       *) # Others
         printf 'Unknown code returned from health API: %s. Retrying in 5 seconds...\n' "${CODE}"
-	sleep 5
-	continue;;
+        sleep 5
+        continue;;
     esac
 
     break
