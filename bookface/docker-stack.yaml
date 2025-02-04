@@ -14,6 +14,8 @@ services:
     configs:
       - source: bookface
         target: /var/www/html/config.json
+    environment:
+      BF_FRONTPAGE_LIMIT: "500"
     networks:
       - "swarm"
 
