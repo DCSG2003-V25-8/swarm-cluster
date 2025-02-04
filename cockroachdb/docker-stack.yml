@@ -9,7 +9,7 @@ services:
       placement:
         max_replicas_per_node: 1
         constraints:
-          - "engine.labels.role == db"
+          - "engine.labels.role == db-worker"
         preferences:
           - spread: "node.hostname"
       update_config:
