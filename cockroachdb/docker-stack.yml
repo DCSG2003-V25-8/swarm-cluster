@@ -57,6 +57,8 @@ services:
         #   - "--max-sql-memory=25%"
 
 configs:
+  # NOTE This is necessary because docker doesn't redeploy configs.
+  #   $ CFG=1 docker stack deploy -c docker-stack.yml cockroachdb
   docker-entrypoint:
     name: "docker-entrypoint.sh-v${CFG:-0}"
     file: ./docker-entrypoint.sh

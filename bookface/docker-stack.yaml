@@ -15,14 +15,18 @@ services:
       - source: bookface
         target: /var/www/html/config.json
     environment:
+      BF_DB_HOST: "tasks.cockroachdb"
+      BF_DB_PORT: "26257"
+      BF_DB_NAME: "bf"
+      BF_DB_USER: "bfuser"
+      BF_DB_PASS: ""
+      BF_WEBHOST: "10.20.0.43"
       BF_FRONTPAGE_LIMIT: "500"
     networks:
       - "swarm"
 
 configs:
   bookface:
-    # NOTE This is necessary because docker doesn't redeploy configs.
-    #   $ CFG=1 docker stack deploy -c docker-stack.yml haproxy
     name: "config.json-v${CFG:-0}"
     file: ./config.json
 
