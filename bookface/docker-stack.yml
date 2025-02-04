@@ -1,19 +1,20 @@
 services:
   bookface:
-    build: ./
     deploy:
       replicas: 2
       placement:
+        max_replicas_per_node: 1
         constraints:
-          - node.labels.tag == www
+          - "node.role == worker"
+          - "engine.labels.db != true"
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
       restart_policy:
         condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-    configs:
-      - source: bookface
-        target: /var/www/html/config.json
+    networks:
+      - "swarm"
     environment:
       BF_DB_HOST: "tasks.cockroachdb"
       BF_DB_PORT: "26257"
@@ -22,13 +23,6 @@ services:
       BF_DB_PASS: ""
       BF_WEBHOST: "10.20.0.43"
       BF_FRONTPAGE_LIMIT: "500"
-    networks:
-      - "swarm"
-
-configs:
-  bookface:
-    name: "config.json-v${CFG:-0}"
-    file: ./config.json
 
 networks:
   swarm:
