@@ -6,8 +6,7 @@ services:
       placement:
         max_replicas_per_node: 1
         constraints:
-          - "node.role == worker"
-          - "engine.labels.db != true"
+          - "engine.labels.role == worker"
       update_config:
         parallelism: 1
         order: start-first

@@ -5,7 +5,7 @@ services:
       replicas: 2
       placement:
         constraints:
-          - "node.labels.webserver == true"
+          - "engine.labels.role == worker"
         max_replicas_per_node: 1
         preferences:
           - spread: "node.hostname"
