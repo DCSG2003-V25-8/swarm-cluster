@@ -3,5 +3,6 @@ FROM httpd:latest
 RUN apt-get update -y \
  && apt-get install -y git apache2 libapache2-mod-php php-pgsql net-tools php-memcache
 
-RUN git clone https://github.com/hioa-cs/bookface.git \
+RUN rm -rf /usr/local/apache2/htdocs/* \
+ && git clone https://github.com/hioa-cs/bookface.git \
  && mv ./bookface/code/* /usr/local/apache2/htdocs/
