@@ -1,8 +1,9 @@
 vcl 4.1;
 import directors;
 
-backend bookstack {
-    .host = "tasks.bookface";
+backend bookface {
+    # TODO Use tasks.bookface?
+    .host = "bookface";
     .port = "80";
     .probe = {
         .url = "/";
@@ -15,12 +16,12 @@ backend bookstack {
 
 sub vcl_init {
     new vdir = directors.round_robin();
-    vdir.add_backend(bookstack);
+    vdir.add_backend(bookface);
 }
 
 sub vcl_recv {
     # Happens before we check if we have this in cache already.
-    if (req.url ~ "^/admin" || req.http.Authorization){
+    if (req.url ~ "^/admin" || req.http.Authorization) {
         return (pass);
     }
 }
