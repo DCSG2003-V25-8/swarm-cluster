@@ -14,5 +14,5 @@ rm SERVICE:
 logs SERVICE N="1":
   #!/usr/bin/env bash
   set -euxo pipefail
-  id=$(docker stack ps {{SERVICE}} | grep Running | awk 'NR=={{N}}' | awk '{print $1}')
+  id="$(docker stack ps {{SERVICE}} | grep Running | awk 'NR=={{N}}' | awk '{print $1}')"
   docker service logs -f "${id}"
