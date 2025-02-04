@@ -1,5 +1,6 @@
 services:
   bookface:
+    image: "ghcr.io/dcsg2003-v25-8/bookface:latest"
     deploy:
       replicas: 2
       placement:
