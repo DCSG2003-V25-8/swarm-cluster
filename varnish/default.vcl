@@ -2,7 +2,7 @@ vcl 4.1;
 import directors;
 
 backend bookstack {
-    .host = "tasks.bookstack";
+    .host = "tasks.bookface";
     .port = "80";
     .probe = {
         .url = "/";
