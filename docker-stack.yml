@@ -25,6 +25,9 @@ services:
       - source: config
         target: /app/config.yaml
         mode: 0400
+      # NOTE https://github.com/m-adawi/swarm-cd?tab=readme-ov-file#give-swarmcd-access-to-private-registries
+      - source: docker-config
+        target: /root/.docker/config.json
 
 secrets:
   # Create a fine-grained access token with the following permissions:
@@ -42,3 +45,5 @@ configs:
     file: ./config/repos.yaml
   config:
     file: ./config/config.yaml
+  docker-config:
+    file: docker-config.json
