@@ -23,6 +23,7 @@ services:
       BF_DB_PASS: ""
       BF_WEBHOST: "10.20.0.43"
       BF_FRONTPAGE_LIMIT: "500"
+      BF_MEMCACHE_SERVER: "memcached"
 
 networks:
   swarm:
