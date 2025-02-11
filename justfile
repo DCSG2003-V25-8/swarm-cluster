@@ -5,8 +5,11 @@ default: _help
 @_help:
   just -l
 
-deploy SERVICE:
-  docker stack deploy --detach=false --resolve-image=always --with-registry-auth {{SERVICE}}
+pull:
+  git pull
+
+deploy SERVICE: pull
+  docker stack deploy --compose-file=./{{SERVICE}}/docker-stack.yml --detach=false --resolve-image=always --with-registry-auth {{SERVICE}}
 
 rm SERVICE:
   docker stack rm {{SERVICE}}

@@ -10,7 +10,6 @@ services:
       - "3005:8080"
     environment:
       GIN_MODE: "debug" # debug / release
-    restart: "unless-stopped"
     secrets:
       - "github_pat"
     volumes:
