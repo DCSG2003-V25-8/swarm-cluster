@@ -52,7 +52,7 @@ rm SERVICE:
 [group('stack')]
 @ps:
   printf 'Running services:\n'
-  docker service ls | awk '{print "    " $1 " " $2 " " $4}'
+  docker service ls | awk '{ printf "\t%s\t\t%s\t%s\n", $1, $4, $2 }'
 
 # Show logs for a service
 [group('stack')]
