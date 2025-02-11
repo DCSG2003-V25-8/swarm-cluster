@@ -1,8 +1,13 @@
-FROM httpd:latest
+FROM php:8.2-apache
 
-RUN apt-get update -y \
- && apt-get install -y git apache2 libapache2-mod-php php-pgsql net-tools php-memcache
+WORKDIR /var/www/html
 
-RUN rm -rf /usr/local/apache2/htdocs/* \
- && git clone https://github.com/hioa-cs/bookface.git \
- && mv ./bookface/code/* /usr/local/apache2/htdocs/
+RUN apt-get update \
+ && apt-get install -y git libpq-dev
+
+RUN git clone https://github.com/hioa-cs/bookface.git \
+ && mv bookface/code/* . \
+ && rm -rf bookface \
+ && printf "{}" > config.json
+
+RUN docker-php-ext-install pgsql pdo_pgsql pdo
