@@ -21,9 +21,15 @@ sub vcl_init {
 
 sub vcl_recv {
     # Happens before we check if we have this in cache already.
+
+    # Don't cache authorized requests.
     if (req.url ~ "^/admin" || req.http.Authorization) {
         return (pass);
     }
+
+    # if (req.url == "/db") {
+    #     return (synth(301, "Moved Permanently"));
+    # }
 }
 
 sub vcl_backend_response {
@@ -38,6 +44,12 @@ sub vcl_backend_response {
         set beresp.do_gzip = true;
     }
 }
+
+# sub vcl_synth {
+#     if (resp.status == 301 && resp.reason == "Moved Permanently") {
+#         set resp.http.Location = "http://cockroachdb:8080/";
+#     }
+# }
 
 sub vcl_deliver {
     # Happens when we have all the pieces we need, and are about to send the

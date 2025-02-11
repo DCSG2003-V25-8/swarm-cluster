@@ -15,8 +15,29 @@ services:
     networks:
       - "swarm"
     environment:
-      - PORT: 8080
-      - API_KEY: REPLACE_ME
+      PORT: "${PORT:-8080}"
+      API_KEY: "${API_KEY:?}"
+    command:
+      - "gunicorn"
+      - "main:app"
+      - "--worker-class"
+      - "uvicorn.workers.UvicornWorker"
+      - "--timeout"
+      - "120"
+      - "--graceful-timeout"
+      - "120"
+      - "--workers"
+      - "2"
+      - "--bind"
+      - "0.0.0.0:${PORT}"
+    configs:
+      - source: "service_account"
+        target: "/usr/src/app/terraform/servicePass"
+
+configs:
+  # Password for the openstack service account
+  service_account:
+    file: "./servicePass"
 
 networks:
   swarm:
