@@ -17,6 +17,7 @@ services:
     environment:
       PORT: "${PORT:-8080}"
       API_KEY: "${API_KEY}"
+      OS_PASSWORD: "${SERVICE_PASS}"
     command:
       - "gunicorn"
       - "main:app"
@@ -30,14 +31,6 @@ services:
       - "2"
       - "--bind"
       - "0.0.0.0:${PORT:-8080}"
-    configs:
-      - source: "service_account"
-        target: "/usr/src/app/terraform/servicePass"
-
-configs:
-  # Password for the openstack service account
-  service_account:
-    file: "./servicePass"
 
 networks:
   swarm:
