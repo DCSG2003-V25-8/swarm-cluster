@@ -13,18 +13,13 @@ services:
         failure_action: rollback
       restart_policy:
         condition: on-failure
-    ports:
-      - "11211:11211"
     networks:
       - "swarm"
-    environment:
-      BF_MEMCACHE_ENABLED_PICTURES: 1
-      BF_MEMCACHE_ENABLED: 1
 
-    #command:
-    #  - --conn-limit=1024
-    #  - --memory-limit=64
-    #  - --threads=4
+    # command:
+    #   - --conn-limit=1024
+    #   - --memory-limit=64
+    #   - --threads=4
 
 networks:
   swarm:
