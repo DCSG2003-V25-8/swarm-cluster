@@ -1,0 +1,23 @@
+services:
+  bookface:
+    image: "ghcr.io/dcsg2003-v25-8/monitoring-api:latest"
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - "engine.labels.role == manager"
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+      restart_policy:
+        condition: on-failure
+    networks:
+      - "swarm"
+    environment:
+      - PORT: 8080
+      - API_KEY: REPLACE_ME
+
+networks:
+  swarm:
+    external: true
