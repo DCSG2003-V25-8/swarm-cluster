@@ -1,5 +1,5 @@
 services:
-  bookface:
+  monitoring-api:
     image: "ghcr.io/dcsg2003-v25-8/monitoring-api:latest"
     deploy:
       replicas: 1
@@ -29,7 +29,7 @@ services:
       - "--workers"
       - "2"
       - "--bind"
-      - "0.0.0.0:${PORT}"
+      - "0.0.0.0:${PORT:-8080}"
     configs:
       - source: "service_account"
         target: "/usr/src/app/terraform/servicePass"
