@@ -48,6 +48,12 @@ rm SERVICE:
     -exec sh -c 'printf "    "; basename "$(dirname "{}")"' \; \
   | sort -u
 
+# List running services
+[group('stack')]
+@ps:
+  printf 'Running services:\n'
+  docker service ls | awk '{print "    " $1 " " $2 " " $4}'
+
 # Show logs for a service
 [group('stack')]
 logs SERVICE N="1":

@@ -17,7 +17,7 @@ services:
     environment:
       PORT: "${PORT:-8080}"
       API_KEY: "${API_KEY}"
-      OS_PASSWORD: "${SERVICE_PASS}"
+      OS_PASSWORD: "${OS_PASSWORD}"
     command:
       - "gunicorn"
       - "main:app"
