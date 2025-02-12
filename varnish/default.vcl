@@ -42,6 +42,10 @@ sub vcl_backend_response {
         set beresp.ttl = 0s;
     }
 
+    if (beresp.status >= 500 && bereq.is_bgfetch) {
+        return (abandon);
+    }
+
     if (beresp.http.Content-Type ~ "text/(html|css|javascript)") {
         set beresp.do_gzip = true;
     }
