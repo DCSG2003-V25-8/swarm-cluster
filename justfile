@@ -7,17 +7,21 @@ set export
 
 dir := absolute_path(justfile_directory())
 
-@_help:
-  just -l
+[group('util')]
+@_default:
+  just --list
 
+[group('util')]
 _pull:
   git pull
 
-# Deploy a stack
-[group('stack')]
-deploy SERVICE: _pull
+[group('util')]
+@_is_service SERVICE:
   {{ if path_exists(join(dir, SERVICE)) == "true" { "" } else { error("Invalid service " + SERVICE) } }}
 
+# Deploy a stack
+[group('stack')]
+deploy SERVICE: _pull (_is_service SERVICE)
   CFG="$(shuf -i 0-255 -n 1)" \
   docker stack deploy \
     --compose-file='{{join(dir, SERVICE, "docker-stack.yml")}}' \
@@ -25,12 +29,6 @@ deploy SERVICE: _pull
     --resolve-image=always \
     --with-registry-auth \
     "{{SERVICE}}"
-
-# Source env file:
-# @set -o allexport; \
-#   test -f '{{join(dir, SERVICE, ".env")}}' \
-#     && source '{{join(dir, SERVICE, ".env")}}'; \
-#   set +o allexport; \
 
 # Delete stack
 [confirm('Are you sure? (y/N)')]
@@ -55,8 +53,8 @@ rm SERVICE:
   printf 'Running services:\n'
   docker service ls | awk '{ printf "\t%s\t\t%s\t%s\n", $1, $4, $2 }'
 
-# Show logs for a service
+# Show logs for a service (`N`: container no.)
 [group('stack')]
-logs SERVICE N="1":
+logs SERVICE N="1": (_is_service SERVICE)
   docker service logs -f \
-    "$(docker stack ps "{{SERVICE}}" | grep Running | awk 'NR=={{N}}' | awk '{print $1}')")"
+    "$(docker stack ps "{{SERVICE}}" | grep Running | awk 'NR=={{N}}' | awk '{print $1}')"
