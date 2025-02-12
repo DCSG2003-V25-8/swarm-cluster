@@ -1,53 +1,62 @@
-# ./cockroach status --insecure --host=localhost:26257
-
 services:
   cockroachdb:
     image: "cockroachdb/cockroach:v23.1.13"
     stop_grace_period: 1m
     deploy:
-      replicas: 2
+      mode: "global"
       placement:
-        max_replicas_per_node: 1
         constraints:
           - "engine.labels.role == db-worker"
-        preferences:
-          - spread: "node.hostname"
       update_config:
+        order: start-first
         failure_action: rollback
+        parallelism: 1
       restart_policy:
         condition: on-failure
         delay: 5s
     environment:
       ALLOW_EMPTY_PASSWORD: "yes"
       COCKROACH_MAX_OFFSET: "500ms"
-      SWARM_HOSTNAME: "{{.Node.Hostname}}"
-      # SWARM_ID: "{{.Task.Slot}}"
     networks:
       - "swarm"
     volumes:
-      - type: bind
-        source: "/{{.Service.Name}}-data-{{.Task.Slot}}"
-        target: "/cockroach/cockroach-data"
-    # configs:
-    #   - source: "docker-entrypoint"
-    #     target: "/docker-entrypoint.sh"
-    # entrypoint: [ "sh", "/docker-entrypoint.sh" ]
-    command:
-      - "start"
-      - "--insecure"
-      - "--advertise-addr=${SWARM_HOSTNAME:?}:26257"
-      - "--join=tasks.cockroachdb:26257"
-      - "--http-addr=0.0.0.0:8080"
-      - "--cache=25%"
-      - "--max-sql-memory=25%"
-      #   - "--advertise-addr={{.Task.Node.Hostname}}:26257"
+      - "cockroachdb:/cockroach/cockroach-data"
+      # These directories have to be created first
+      # - type: bind
+      #   source: "/{{.Service.Name}}-data-{{.Task.Slot}}"
+      #   target: "/cockroach/cockroach-data"
+    configs:
+      - source: "start-db"
+        target: "/docker-entrypoint.sh"
+    entrypoint: [ "/bin/sh", "/docker-entrypoint.sh" ]
 
-# configs:
-#   # NOTE This is necessary because docker doesn't redeploy configs.
-#   #   $ CFG=1 docker stack deploy -c docker-stack.yml cockroachdb
-#   docker-entrypoint:
-#     name: "docker-entrypoint.sh-v${CFG:-0}"
-#     file: ./docker-entrypoint.sh
+  cockroachdb-init:
+    image: "cockroachdb/cockroach:v23.1.13"
+    deploy:
+      mode: "replicated-job"
+      replicas: 1
+      placement:
+        constraints:
+          - "engine.labels.role == db-worker"
+    depends_on:
+      - "cockroachdb"
+    networks:
+      - "swarm"
+    configs:
+      - source: "init-cluster"
+        target: "/docker-entrypoint.sh"
+    entrypoint: [ "/bin/sh", "/docker-entrypoint.sh" ]
+
+configs:
+  start-db:
+    name: "start-db.sh-v${CFG:-0}"
+    file: "./start-db.sh"
+  init-cluster:
+    name: "init-cluster.sh-v${CFG:-0}"
+    file: "./init-cluster.sh"
+
+volumes:
+  cockroachdb:
 
 networks:
   swarm:
