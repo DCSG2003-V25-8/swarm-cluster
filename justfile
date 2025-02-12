@@ -33,7 +33,7 @@ deploy SERVICE: _pull (_is_service SERVICE)
 # Delete stack
 [confirm('Are you sure? (y/N)')]
 [group('stack')]
-rm SERVICE:
+rm SERVICE: (_is_service SERVICE)
   docker stack rm "{{SERVICE}}"
 
 # List available stacks
