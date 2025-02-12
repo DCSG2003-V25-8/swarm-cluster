@@ -54,3 +54,20 @@ sub vcl_deliver {
     # Happens when we have all the pieces we need, and are about to send the
     # response to the client.
 }
+
+sub vcl_backend_error {
+    set beresp.http.Content-Type = "text/html; charset=utf-8";
+    set beresp.http.Retry-After = "60";
+    
+    synthetic {"
+        <html>
+        <head><title>404 Not Found</title></head>
+        <body>
+        <h1>404 - Page Not Found</h1>
+        <p>The requested page could not be found.</p>
+        </body>
+        </html>
+    "};
+    
+    return (deliver);
+}
