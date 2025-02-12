@@ -61,19 +61,3 @@ sub vcl_deliver {
     # Happens when we have all the pieces we need, and are about to send the
     # response to the client.
 }
-
-sub vcl_backend_error {
-    if (obj.ttl <= 0s && obj.grace <= 0s) {
-        set beresp.http.Content-Type = "text/html; charset=utf-8";
-        synthetic {"
-            <html>
-            <head><title>503 Service Unavailable</title></head>
-            <body>
-            <h1>Service Unavailable</h1>
-            <p>The backend is down and no cached content is available.</p>
-            </body>
-            </html>
-        "};
-        return (deliver);
-    }
-}
