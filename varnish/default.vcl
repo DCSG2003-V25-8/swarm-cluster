@@ -29,7 +29,7 @@ sub vcl_recv {
     if (std.healthy(req.backend_hint)) {
         // change the behavior for healthy backends: Cap grace to 10s
         set req.grace = 1m;
-    } else {
+    } else if (obj.grace <= 0s){
         set resp.http.Content-Type = "text/html; charset=utf-8";
         set resp.body = {"<!DOCTYPE html>
         <html>
