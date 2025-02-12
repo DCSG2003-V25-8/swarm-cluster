@@ -26,19 +26,15 @@ sub vcl_recv {
         return (pass);
     }
 
-    if (std.healthy(req.backend_hint)) {
-        // change the behavior for healthy backends: Cap grace to 10s
-        set req.grace = 1m;
-    }
 }
 
 sub vcl_backend_response {
     # Happens after we have read the response headers from the backend.
-    #set beresp.ttl = 1m; # How long the cache is valid
-    set beresp.grace = 24h; # How long the server can serv it after it is invalid (changed in vcl_recv for healthy servers)
-    set beresp.keep = 4m; # Keep stale object in cache for background fetch
-
-    if (beresp.status >= 500 && bereq.is_bgfetch) {
+    if (beresp.status == 200 || beresp.status == 301 || beresp.status == 302) {
+        set beresp.ttl = 1m; # How long the cache is valid
+        set beresp.grace = 24h; # How long the server can serv it after it is invalid (changed in vcl_recv for healthy servers)
+        set beresp.keep = 4m; # Keep stale object in cache for background fetch
+    } else {
         return (abandon);
     }
 
