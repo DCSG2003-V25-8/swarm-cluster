@@ -34,7 +34,7 @@ sub vcl_recv {
 sub vcl_backend_response {
     # Happens after we have read the response headers from the backend.
     if (beresp.status == 200 || beresp.status == 301 || beresp.status == 302) {
-        set beresp.ttl = 1h;
+        set beresp.ttl = 1m;
     } else {
         set beresp.ttl = 0s;
     }
