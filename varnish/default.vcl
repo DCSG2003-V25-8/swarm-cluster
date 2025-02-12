@@ -57,17 +57,21 @@ sub vcl_deliver {
 
 sub vcl_backend_error {
     set beresp.http.Content-Type = "text/html; charset=utf-8";
-    set beresp.http.Retry-After = "60";
-    
-    synthetic {"
-        <html>
-        <head><title>404 Not Found</title></head>
-        <body>
-        <h1>404 - Page Not Found</h1>
-        <p>The requested page could not be found.</p>
-        </body>
-        </html>
-    "};
-    
+    set beresp.http.Retry-After = "5";
+    set beresp.body = {"<!DOCTYPE html>
+<html>
+  <head>
+    <title>"} + beresp.status + " " + beresp.reason + {"</title>
+  </head>
+  <body>
+    <h1>Error "} + beresp.status + " " + beresp.reason + {"</h1>
+    <p>"} + beresp.reason + {"</p>
+    <h3>Guru Meditation:</h3>
+    <p>XID: "} + bereq.xid + {"</p>
+    <hr>
+    <p>Varnish cache server</p>
+  </body>
+</html>
+"};
     return (deliver);
 }
