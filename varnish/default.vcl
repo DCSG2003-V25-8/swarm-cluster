@@ -34,7 +34,7 @@ sub vcl_recv {
 
 sub vcl_backend_response {
     # Happens after we have read the response headers from the backend.
-    set beresp.ttl = 1m; # How long the cache is valid
+    #set beresp.ttl = 1m; # How long the cache is valid
     set beresp.grace = 24h; # How long the server can serv it after it is invalid (changed in vcl_recv for healthy servers)
     set beresp.keep = 4m; # Keep stale object in cache for background fetch
 
