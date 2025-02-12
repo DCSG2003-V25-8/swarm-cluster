@@ -29,6 +29,24 @@ sub vcl_recv {
     if (std.healthy(req.backend_hint)) {
         // change the behavior for healthy backends: Cap grace to 10s
         set req.grace = 1m;
+    } else {
+        set resp.http.Content-Type = "text/html; charset=utf-8";
+        set resp.body = {"<!DOCTYPE html>
+        <html>
+        <head>
+            <title>"} + beresp.status + " " + beresp.reason + {"</title>
+        </head>
+        <body>
+            <h1>Error "} + beresp.status + " " + beresp.reason + {"</h1>
+            <p>"} + beresp.reason + {"</p>
+            <h3>Guru Meditation:</h3>
+            <p>XID: "} + bereq.xid + {"</p>
+            <hr>
+            <p>Varnish cache server</p>
+        </body>
+        </html>
+        "};
+        return (deliver);
     }
 }
 
@@ -58,23 +76,3 @@ sub vcl_deliver {
     # response to the client.
 }
 
-sub vcl_backend_error {
-    set beresp.http.Content-Type = "text/html; charset=utf-8";
-    set beresp.http.Retry-After = "5";
-    set beresp.body = {"<!DOCTYPE html>
-<html>
-  <head>
-    <title>"} + beresp.status + " " + beresp.reason + {"</title>
-  </head>
-  <body>
-    <h1>Error "} + beresp.status + " " + beresp.reason + {"</h1>
-    <p>"} + beresp.reason + {"</p>
-    <h3>Guru Meditation:</h3>
-    <p>XID: "} + bereq.xid + {"</p>
-    <hr>
-    <p>Varnish cache server</p>
-  </body>
-</html>
-"};
-    return (deliver);
-}
