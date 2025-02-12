@@ -18,6 +18,7 @@ _pull:
 deploy SERVICE: _pull
   {{ if path_exists(join(dir, SERVICE)) == "true" { "" } else { error("Invalid service " + SERVICE) } }}
 
+  CFG="${RANDOM}" \
   docker stack deploy \
     --compose-file='{{join(dir, SERVICE, "docker-stack.yml")}}' \
     --detach=false \

@@ -15,53 +15,40 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
-        # parallelism: 1
-        # delay: 10s
-        # monitor: 30s
-        # max_failure_ratio: 0.2
       restart_policy:
         condition: on-failure
         delay: 5s
-      # limits:
-      #   cpus: '0.50'
-      #   memory: 50M
-      #   pids: 1
-      # reservations:
-      #   cpus: '0.25'
-      #   memory: 20M
-    # --listen-addr=roach1:26257 --advertise-addr=roach1:26257
-    # ports:
-    #   - "8080:8080"    # CockroachDB Admin UI (insecure mode)
-    #   - "26257:26257"
     environment:
       ALLOW_EMPTY_PASSWORD: "yes"
       COCKROACH_MAX_OFFSET: "500ms"
-      SWARM_ID: "{{.Task.Slot}}"
-    # volumes:
-    #   - type: bind
-    #     source: /data/cockroachdb/{{.Service.Name}}-{{.Task.Slot}}
-    #     target: /cockroach/cockroach-data
+      SWARM_HOSTNAME: "{{.Node.Hostname}}"
+      # SWARM_ID: "{{.Task.Slot}}"
     networks:
       - "swarm"
-    configs:
-      - source: "docker-entrypoint"
-        target: "/docker-entrypoint.sh"
-    entrypoint: [ "sh", "/docker-entrypoint.sh" ]
-        # command:
-        #   - "start"
-        #   - "--insecure"
-        #   - "--advertise-addr={{.Task.Node.Hostname}}:26257"
-        #   - "--join=tasks.cockroachdb:26257"
-        #   - "--http-addr=0.0.0.0:8080"
-        #   - "--cache=25%"
-        #   - "--max-sql-memory=25%"
+    volumes:
+      - type: bind
+        source: "/{{.Service.Name}}-data-{{.Task.Slot}}"
+        target: "/cockroach/cockroach-data"
+    # configs:
+    #   - source: "docker-entrypoint"
+    #     target: "/docker-entrypoint.sh"
+    # entrypoint: [ "sh", "/docker-entrypoint.sh" ]
+    command:
+      - "start"
+      - "--insecure"
+      - "--advertise-addr=${SWARM_HOSTNAME:?}:26257"
+      - "--join=tasks.cockroachdb:26257"
+      - "--http-addr=0.0.0.0:8080"
+      - "--cache=25%"
+      - "--max-sql-memory=25%"
+      #   - "--advertise-addr={{.Task.Node.Hostname}}:26257"
 
-configs:
-  # NOTE This is necessary because docker doesn't redeploy configs.
-  #   $ CFG=1 docker stack deploy -c docker-stack.yml cockroachdb
-  docker-entrypoint:
-    name: "docker-entrypoint.sh-v${CFG:-0}"
-    file: ./docker-entrypoint.sh
+# configs:
+#   # NOTE This is necessary because docker doesn't redeploy configs.
+#   #   $ CFG=1 docker stack deploy -c docker-stack.yml cockroachdb
+#   docker-entrypoint:
+#     name: "docker-entrypoint.sh-v${CFG:-0}"
+#     file: ./docker-entrypoint.sh
 
 networks:
   swarm:
