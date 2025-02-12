@@ -31,7 +31,6 @@ services:
       - "2"
       - "--bind"
       - "0.0.0.0:${PORT:-8080}"
-      - "0.0.0.0:${PORT}"
     volumes:
       - "./terraform.tfstate:/usr/src/app/terraform/terraform.tfstate"
 
