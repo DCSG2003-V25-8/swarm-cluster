@@ -33,6 +33,8 @@ services:
     configs:
       - source: "service_account"
         target: "/usr/src/app/terraform/servicePass"
+    volumes:
+      - "./terraform.tfstate:/usr/src/app/terraform/terraform.tfstate"
 
 configs:
   # Password for the openstack service account
