@@ -1,5 +1,5 @@
 services:
-  bookface:
+  monitoring-api:
     image: "ghcr.io/dcsg2003-v25-8/monitoring-api:latest"
     deploy:
       replicas: 1
@@ -17,6 +17,7 @@ services:
     environment:
       PORT: "${PORT:-8080}"
       API_KEY: "${API_KEY}"
+      OS_PASSWORD: "${OS_PASSWORD}"
     command:
       - "gunicorn"
       - "main:app"
@@ -29,17 +30,10 @@ services:
       - "--workers"
       - "2"
       - "--bind"
+      - "0.0.0.0:${PORT:-8080}"
       - "0.0.0.0:${PORT}"
-    configs:
-      - source: "service_account"
-        target: "/usr/src/app/terraform/servicePass"
     volumes:
       - "./terraform.tfstate:/usr/src/app/terraform/terraform.tfstate"
-
-configs:
-  # Password for the openstack service account
-  service_account:
-    file: "./servicePass"
 
 networks:
   swarm:

@@ -1,3 +1,5 @@
+# TODO Make .env available in the container
+
 services:
   swarm-cd:
     image: "ghcr.io/m-adawi/swarm-cd:latest"

@@ -1,0 +1,28 @@
+services:
+  uptime-kuma:
+    image: "louislam/uptime-kuma:1"
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - "node.role == manager"
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "3001:3001"
+    volumes:
+      - "kuma-data:/app/data"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - "swarm"
+
+networks:
+  swarm:
+    external: true
+
+volumes:
+  kuma-data:

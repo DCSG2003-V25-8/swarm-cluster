@@ -2,7 +2,6 @@ vcl 4.1;
 import directors;
 
 backend bookface {
-    # TODO Use tasks.bookface?
     .host = "bookface";
     .port = "80";
     .probe = {
