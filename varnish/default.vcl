@@ -29,24 +29,6 @@ sub vcl_recv {
     if (std.healthy(req.backend_hint)) {
         // change the behavior for healthy backends: Cap grace to 10s
         set req.grace = 1m;
-    } else if (obj.grace <= 0s){
-        set resp.http.Content-Type = "text/html; charset=utf-8";
-        set resp.body = {"<!DOCTYPE html>
-        <html>
-        <head>
-            <title>"} + beresp.status + " " + beresp.reason + {"</title>
-        </head>
-        <body>
-            <h1>Error "} + beresp.status + " " + beresp.reason + {"</h1>
-            <p>"} + beresp.reason + {"</p>
-            <h3>Guru Meditation:</h3>
-            <p>XID: "} + bereq.xid + {"</p>
-            <hr>
-            <p>Varnish cache server</p>
-        </body>
-        </html>
-        "};
-        return (deliver);
     }
 }
 
@@ -76,3 +58,18 @@ sub vcl_deliver {
     # response to the client.
 }
 
+sub vcl_backend_error {
+    if (obj.ttl <= 0s && obj.grace <= 0s) {
+        set beresp.http.Content-Type = "text/html; charset=utf-8";
+        synthetic {"
+            <html>
+            <head><title>503 Service Unavailable</title></head>
+            <body>
+            <h1>Service Unavailable</h1>
+            <p>The backend is down and no cached content is available.</p>
+            </body>
+            </html>
+        "};
+        return (deliver);
+    }
+}
