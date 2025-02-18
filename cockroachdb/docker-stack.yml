@@ -21,6 +21,7 @@ services:
       - "swarm"
     volumes:
       - "cockroachdb:/cockroach/cockroach-data"
+      - "/bfbackup:/cockroach/cockroach-data/extern"
       # These directories have to be created first
       # - type: bind
       #   source: "/{{.Service.Name}}-data-{{.Task.Slot}}"
