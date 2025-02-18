@@ -3,6 +3,7 @@
 # Just quick reference: https://github.com/casey/just/blob/master/examples/kitchen-sink.just
 
 set dotenv-load
+set dotenv-required
 set export
 
 dir := absolute_path(justfile_directory())
