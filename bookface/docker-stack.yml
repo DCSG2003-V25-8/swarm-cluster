@@ -21,7 +21,7 @@ services:
       BF_DB_USER: "${BF_DB_USER:-bfuser}"
       BF_DB_PASS: "${BF_DB_PASS:-}"
       BF_WEBHOST: "${BF_WEBHOST:-10.20.0.43}"
-      BF_FRONTPAGE_LIMIT: "500"
+      BF_FRONTPAGE_LIMIT: "1000"
       BF_MEMCACHE_SERVER: "memcached"
 
 networks:
