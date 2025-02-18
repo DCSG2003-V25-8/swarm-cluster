@@ -3,7 +3,7 @@ FROM php:8.2-apache
 WORKDIR /var/www/html
 
 RUN apt-get update \
- && apt-get install -y git libpq-dev libmemcached-dev zlib1g-dev \
+ && apt-get install -y git libpq-dev libmemcached-dev zlib1g-dev libevent-dev \
  && pecl install memcache \
  && docker-php-ext-enable memcache
  
