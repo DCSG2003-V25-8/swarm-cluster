@@ -12,16 +12,12 @@ dir := absolute_path(justfile_directory())
   just --list
 
 [group('util')]
-_pull:
-  git pull
-
-[group('util')]
 @_is_service SERVICE:
   {{ if path_exists(join(dir, SERVICE)) == "true" { "" } else { error("Invalid service " + SERVICE) } }}
 
 # Deploy a stack
 [group('stack')]
-deploy SERVICE: _pull (_is_service SERVICE)
+deploy SERVICE: (_is_service SERVICE)
   CFG="$(date +%s)" \
   docker stack deploy \
     --compose-file='{{join(dir, SERVICE, "docker-stack.yml")}}' \
