@@ -10,4 +10,4 @@ RUN git clone https://github.com/hioa-cs/bookface.git \
  && rm -rf bookface \
  && printf "{}" > config.json
 
-RUN docker-php-ext-install pgsql pdo_pgsql pdo
+RUN docker-php-ext-install pgsql pdo_pgsql pdo memcached
