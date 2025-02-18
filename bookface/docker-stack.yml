@@ -15,7 +15,7 @@ services:
     networks:
       - "swarm"
     environment:
-      BF_DB_HOST: "cockroachdb"
+      BF_DB_HOST: "192.168.128.253"
       BF_DB_PORT: "26257"
       BF_DB_NAME: "${BF_DB_NAME:-bf}"
       BF_DB_USER: "${BF_DB_USER:-bfuser}"
