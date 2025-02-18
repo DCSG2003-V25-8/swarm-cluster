@@ -4,7 +4,8 @@ WORKDIR /var/www/html
 
 RUN apt-get update \
  && apt-get install -y git libpq-dev libmemcached-dev zlib1g-dev \
- && pecl install memcached
+ && pecl install memcached \
+ && docker-php-ext-enable memcached
 
 RUN git clone https://github.com/hioa-cs/bookface.git \
  && mv bookface/code/* . \
