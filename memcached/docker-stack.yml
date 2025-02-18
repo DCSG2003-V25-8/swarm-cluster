@@ -16,11 +16,6 @@ services:
     networks:
       - "swarm"
 
-    # command:
-    #   - --conn-limit=1024
-    #   - --memory-limit=64
-    #   - --threads=4
-
 networks:
   swarm:
     exsternal: true
