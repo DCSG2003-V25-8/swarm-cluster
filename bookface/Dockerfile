@@ -13,3 +13,5 @@ RUN git clone https://github.com/hioa-cs/bookface.git \
  && mv bookface/code/* . \
  && rm -rf bookface \
  && printf "{}" > config.json
+
+ CMD ["apache2-foreground"]
