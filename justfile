@@ -22,7 +22,7 @@ _pull:
 # Deploy a stack
 [group('stack')]
 deploy SERVICE: _pull (_is_service SERVICE)
-  CFG="$(shuf -i 0-255 -n 1)" \
+  CFG="$(date +%s)" \
   docker stack deploy \
     --compose-file='{{join(dir, SERVICE, "docker-stack.yml")}}' \
     --detach=false \
