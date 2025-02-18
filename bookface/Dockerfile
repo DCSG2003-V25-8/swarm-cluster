@@ -6,10 +6,10 @@ RUN apt-get update \
  && apt-get install -y git libpq-dev libmemcached-dev zlib1g-dev \
  && pecl install memcached \
  && docker-php-ext-enable memcached
+ 
+RUN docker-php-ext-install pgsql pdo_pgsql pdo
 
 RUN git clone https://github.com/hioa-cs/bookface.git \
  && mv bookface/code/* . \
  && rm -rf bookface \
  && printf "{}" > config.json
-
-RUN docker-php-ext-install pgsql pdo_pgsql pdo memcached
