@@ -3,7 +3,8 @@ FROM php:8.2-apache
 WORKDIR /var/www/html
 
 RUN apt-get update \
- && apt-get install -y git libpq-dev libmemcached-dev
+ && apt-get install -y git libpq-dev libmemcached-dev zlib1g-dev \
+ && pecl install memcached
 
 RUN git clone https://github.com/hioa-cs/bookface.git \
  && mv bookface/code/* . \
