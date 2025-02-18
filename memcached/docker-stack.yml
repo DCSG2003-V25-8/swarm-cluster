@@ -4,7 +4,7 @@ services:
     hostname: "memcached"
     deploy:
       replicas: 1
-      pleacment:
+      placement:
         constraints:
           - "engine.labels.role == worker"
       update_config:
@@ -18,4 +18,4 @@ services:
 
 networks:
   swarm:
-    exsternal: true
+    external: true
