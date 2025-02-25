@@ -6,7 +6,7 @@ services:
       mode: "global"
       placement:
         constraints:
-          - "engine.labels.role == db-worker"
+          - "engine.labels.role == worker"
       update_config:
         order: start-first
         failure_action: rollback
@@ -39,7 +39,7 @@ services:
       replicas: 1
       placement:
         constraints:
-          - "engine.labels.role == db-worker"
+          - "engine.labels.role == worker"
     depends_on:
       - "cockroachdb"
     networks:

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 set -o nounset  # Disallow empty variables
-set -o errexit  # Exit when an error occurs
-# set -o xtrace   # Show executed commands
+# set -o errexit  # Exit when an error occurs
+set -o xtrace   # Show executed commands
 
 microdnf -y install jq
 
@@ -17,6 +17,7 @@ db_exists () {
 
   result="$(cockroach sql \
     --insecure \
+    --host=cockroachdb:26257 \
     --format=csv \
     --execute "${query}" \
   | tail -n 1)"
@@ -59,9 +60,10 @@ main () {
       "node is waiting for cluster initialization")
         printf 'Initializing db...\n'
         init_db;;
-      null) # Initialized :D
-        printf 'Cluster ready, creating db...\n'
-        create_db
+      null|"") # Initialized :D
+        printf 'Cluster ready...\n'
+	# sleep 10
+        # create_db
         break;;
       "liveness record not found"|"node is not accepting SQL clients")
         printf 'Waiting for cluster readimness...\n';;
