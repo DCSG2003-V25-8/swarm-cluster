@@ -1,0 +1,19 @@
+services:
+  bookface:
+    image: "ghcr.io/dcsg2003-v25-8/bookface:latest"
+    deploy:
+      mode: global
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+      restart_policy:
+        condition: on-failure
+    networks:
+      - "swarm"
+    volumes:
+      - "glusterfs:/data"
+
+networks:
+  swarm:
+    external: true
