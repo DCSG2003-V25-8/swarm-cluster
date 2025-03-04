@@ -1,5 +1,5 @@
 services:
-  bookface:
+  glusterfs:
     image: "ghcr.io/dcsg2003-v25-8/bookface:latest"
     deploy:
       mode: global
@@ -17,3 +17,6 @@ services:
 networks:
   swarm:
     external: true
+
+volumes:
+  glusterfs:
