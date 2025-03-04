@@ -13,8 +13,8 @@ cockroach start \
   --listen-addr="0.0.0.0:26257" \
   --http-addr="0.0.0.0:8080" \
   --advertise-addr="$(hostname -i):26257" \
-  --join="${nodes}" # \
-  # --cluster-name="bookface"
+  --join="${nodes}" \
+  --cluster-name="bookface"
   # --cluster-name="bookface" \
   # --join=tasks.cockroachdb:26257 \
   # --listen-addr=":26257" \

@@ -8,7 +8,7 @@ microdnf -y install jq
 
 init_db () {
   printf 'Initializing CockroachDB...\n'
-  cockroach init --insecure --host=cockroachdb:26257 # --cluster-name="bookface"
+  cockroach init --insecure --host=cockroachdb:26257 --cluster-name="bookface"
 }
 
 db_exists () {
@@ -18,6 +18,7 @@ db_exists () {
   result="$(cockroach sql \
     --insecure \
     --host=cockroachdb:26257 \
+    --echo-sql \
     --format=csv \
     --execute "${query}" \
   | tail -n 1)"
@@ -34,7 +35,7 @@ create_db () {
   printf 'Creating database...\n'
 
   # heredoc requires indentation with tabs
-	cat <<-EOF | cockroach sql --insecure --host=cockroachdb:26257
+	cat <<-EOF | cockroach sql --insecure --host=cockroachdb:26257 --echo-sql
 	CREATE DATABASE IF NOT EXISTS bf;
 	CREATE USER IF NOT EXISTS bfuser;
 	GRANT ALL ON DATABASE bf TO bfuser;
@@ -55,18 +56,26 @@ main () {
 
     printf '%s\n' "${health}"
 
+    # API is sad, returns an empty response if it doesn't vibe with returning yet
+    if test -z "${health// }"; then
+      printf 'Health response empty, waiting...\n'
+      sleep 2.5
+      continue
+    fi
+
     # CockroachDB is shiet and returns code 14 for *all* errors
     case "${error}" in
       "node is waiting for cluster initialization")
         printf 'Initializing db...\n'
         init_db;;
       null|"") # Initialized :D
-        printf 'Cluster ready...\n'
-	# sleep 10
-        # create_db
+        printf 'Cluster ready, waiting 10s before creating...\n'
+        sleep 10
+        create_db
+	printf 'Database created, enjoy! :⁾\n'
         break;;
       "liveness record not found"|"node is not accepting SQL clients")
-        printf 'Waiting for cluster readimness...\n';;
+        printf 'Waiting for cluster readiness...\n';;
       *)
         printf 'Unknown message (see output above), waiting...\n';;
     esac
